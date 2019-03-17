@@ -20,18 +20,21 @@ object InboundToHive {
   val localPath = System.getProperty("user.home") + "/datasets/new_datasets/definitive_guide"
   val archive_dir = System.getProperty("user.home") + "/datasets/new_datasets/archive_dir"
   var isReloaded:Boolean = false
+
+
   def main (args: Array[String]) {
 
     val database_name: String = args(0) //rajeshs_task_db
     val table_name: String = args(1) //retail_invoice_incr_avro
-    println("inside the main ")
+
     val isTableLocationValid: Boolean = checkIfFileExists(table_location)
     val isInboundLocationValid: Boolean = checkIfFileExists(inbound_location)
+    // Need to implement args parser with scopt.OParser [pending]
     if (args.length >= 2) {
       println("database_name = " + database_name)
       println("table_name = " + table_name)
     } else {
-      println("terminating program since no database_name and table_name parameters didn't pass ")
+      println("terminating program since no database,table parameters didn't pass ")
       System.exit(1)
     }
     if (!isTableLocationValid) {
@@ -42,7 +45,7 @@ object InboundToHive {
       System.exit(1)
     }
     val isNewLoadRequested: Boolean = args.length >= 3 && args(2).equalsIgnoreCase("request_load")
-    println("*****isNewLoadRequested is "+isNewLoadRequested+"****")
+    println("*****Requestd Reload ? :"+isNewLoadRequested+" ****")
     val isTableExists: Boolean = spark.catalog.tableExists(database_name, table_name)
 
 
@@ -61,15 +64,15 @@ object InboundToHive {
           postValidation(database_name + "." + table_name)
         }
         else {
-          println(" load requested with new file from local to inbound")
+          println(" Load requested with new file from local to inbound")
           val localFilePath = localPath + "/" + getLatestLocalFile(localPath)
           val returncode = fileTransferToInbound(localFilePath, inbound_location)
           if(returncode==0) println("file backup is successful") else println("file backup is failed")
-          println("reloading inbound with new data")
+          println("reloading inbound with new file")
           val filename = getLatestFile()
           val customerInvoice_DF_new =readDataFrame(filename)
           isReloaded=true;
-          println("isReloaded = "+isReloaded)
+          //println("isReloaded = "+isReloaded)
           customerInvoice_DF_new.show(1,false)
           println("Inserting new data to table")
           writeToTable(database_name,table_name,customerInvoice_DF_new,isTableExists)
@@ -85,6 +88,7 @@ object InboundToHive {
 //if request_load added as arg(2)
     if (args.length > 3 && args(3).equalsIgnoreCase("test")) postValidation(database_name + "." + table_name)
 //if request_load ignored as arg(2)
+    if (args.length == 3 && args(2).equalsIgnoreCase("test")) postValidation(database_name + "." + table_name)
 
 
   }
@@ -149,6 +153,12 @@ if(current_partition == fileValue) println("file was already processed") else pr
     current_partition == fileValue
   }
 
+  /**
+    *
+    * @param local_file_path
+    * @param destFilePath
+    * @return status code 0 or 1
+    */
   def fileTransferToInbound (local_file_path: String, destFilePath: String) = {
     val srcPath = new Path(local_file_path)
     val destPath = new Path(destFilePath)
@@ -159,13 +169,30 @@ if(current_partition == fileValue) println("file was already processed") else pr
   "mv -i " + local_file_path + " " + archive_dir + "" !
   }
 
+  /**
+    *
+    * @param Local directory name
+    * @returns latest local file available for process
+    */
   def getLatestLocalFile (dir: String) ={
     val dir = new File(localPath)
     val local_filename = dir.listFiles.filter(_.isFile).map(_.getName).sorted.head
     println("latest local filename : "+local_filename)
     local_filename
   }
-def writeToTable(database_name:String,table_name:String,customerInvoice_DF:DataFrame,isTableExists:Boolean)={
+
+  /**
+    *
+    * @param database_name
+    * @param table_name
+    * @param customerInvoice_DF
+    * @param isTableExists
+    *
+    * @returns nothing.
+    *         Write the given dataframe to avro partitioned external table
+    *
+    */
+  def writeToTable(database_name:String,table_name:String,customerInvoice_DF:DataFrame,isTableExists:Boolean)={
   if (isTableExists) {
     println(database_name + "." + table_name + " is exists")
     val existing_data_df = spark.sql("select * from " + database_name + "." + table_name)
@@ -186,8 +213,6 @@ def writeToTable(database_name:String,table_name:String,customerInvoice_DF:DataF
   }
 }
 }
-
-
 
 /*    val customerInvoiceSchema = StructType(Array(
       StructField("InvoiceNo", IntegerType, true),
