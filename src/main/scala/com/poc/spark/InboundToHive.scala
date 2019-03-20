@@ -220,9 +220,11 @@ if(current_partition == fileValue) println("file was already processed") else pr
       val database_name:String = config.database
       val table_name:String = config.table
       val isNewLoadRequested: Boolean =config.isLoadRequested
+      val isPostValidationRequired: Boolean =config.isPostValidationRequired
       println("database_name==" + database_name)
       println("database_name=" + table_name)
       println("isNewLoadRequested=" + isNewLoadRequested)
+      println("isPostValidationRequired=" + isPostValidationRequired)
 
     } getOrElse {
       // arguments are bad, usage message will have been displayed
