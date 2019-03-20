@@ -20,6 +20,8 @@ libraryDependencies += "org.apache.hbase" % "hbase-common" % "1.1.2"
 libraryDependencies += "org.yaml" % "snakeyaml" % "1.24"
 // https://mvnrepository.com/artifact/com.databricks/spark-avro
 libraryDependencies += "com.databricks" %% "spark-avro" % "4.0.0"
+// https://mvnrepository.com/artifact/com.github.scopt/scopt
+libraryDependencies += "com.github.scopt" %% "scopt" % "3.3.0"
 
 //resolvers += "typesafe" at "http://repo.typesafe.com/typesafe/releases/"
 

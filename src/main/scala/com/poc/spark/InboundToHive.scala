@@ -5,7 +5,8 @@ import sys.process._
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions._
-
+import com.poc.spark.ArgsProcessor.cmdParser
+import com.poc.spark.ParseConfig
 //spark-submit --packages com.databricks:spark-avro_2.11:4.0.0 --class com.poc.spark.InboundToHive /home/rajeshs/jars_from_intellij/new_jars/poc_hivetohbase_2.11-0.1.jar rajeshs_task_db retail_invoice_incr_avro request_load test
 //com.poc.spark.InboundToHive
 
@@ -212,6 +213,43 @@ if(current_partition == fileValue) println("file was already processed") else pr
     println(table_name + " is created")
   }
 }
+  def argParsing(args:Array[String])={
+
+    cmdParser.parse(args, ParseConfig() ) map { config =>
+      // do stuff
+      val database_name:String = config.database
+      val table_name:String = config.table
+      val isNewLoadRequested: Boolean =config.isLoadRequested
+      println("database_name==" + database_name)
+      println("database_name=" + table_name)
+      println("isNewLoadRequested=" + isNewLoadRequested)
+
+    } getOrElse {
+      // arguments are bad, usage message will have been displayed
+    }
+    val database_name: String = database_name //rajeshs_task_db
+    val table_name: String = table_name //retail_invoice_incr_avro
+
+    val isTableLocationValid: Boolean = checkIfFileExists(table_location)
+    val isInboundLocationValid: Boolean = checkIfFileExists(inbound_location)
+    // Need to implement args parser with scopt.OParser [pending]
+    if (args.length >= 2) {
+      println("database_name = " + database_name)
+      println("table_name = " + table_name)
+    } else {
+      println("terminating program since no database,table parameters didn't pass ")
+      System.exit(1)
+    }
+    if (!isTableLocationValid) {
+      println("please check if " + table_location + " is valid path")
+      System.exit(1)
+    } else if (!isInboundLocationValid) {
+      println("please check if " + inbound_location + " is valid path")
+      System.exit(1)
+    }
+    val isNewLoadRequested: Boolean = args.length >= 3 && args(2).equalsIgnoreCase("request_load")
+    println("*****Requestd Reload ? :"+isNewLoadRequested+" ****")
+  }
 }
 
 /*    val customerInvoiceSchema = StructType(Array(
