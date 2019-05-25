@@ -22,6 +22,10 @@ libraryDependencies += "org.yaml" % "snakeyaml" % "1.24"
 libraryDependencies += "com.databricks" %% "spark-avro" % "4.0.0"
 // https://mvnrepository.com/artifact/com.github.scopt/scopt
 libraryDependencies += "com.github.scopt" %% "scopt" % "3.3.0"
+libraryDependencies += "org.apache.spark" % "spark-sql-kafka-0-10_2.11" % "2.2.0"
+libraryDependencies += "org.apache.kafka" % "kafka-clients" % "0.11.0.1"
+
 
 //resolvers += "typesafe" at "http://repo.typesafe.com/typesafe/releases/"
+
 
