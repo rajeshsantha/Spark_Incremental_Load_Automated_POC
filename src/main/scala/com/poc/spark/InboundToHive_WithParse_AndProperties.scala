@@ -2,8 +2,10 @@ package com.poc.spark
 
 import java.io.File
 
+
+import com.poc.spark.ArgsProcessor.cmdParser
+import com.typesafe.config.ConfigFactory
 import org.apache.hadoop.fs.{FileSystem, Path}
-import org.apache.spark.SparkContext
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
@@ -11,19 +13,13 @@ import scala.sys.process._
 import scala.util.Try
 //spark-submit --packages com.databricks:spark-avro_2.11:4.0.0 --class com.poc.spark.InboundToHive /home/rajeshs/jars_from_intellij/new_jars/poc_hivetohbase_2.11-0.1.jar rajeshs_task_db retail_invoice_incr_avro request_load test
 //com.poc.spark.InboundToHive
-// new spark-submit for --conf changes
-//spark-submit --packages com.databricks:spark-avro_2.11:4.0.0 --class com.poc.spark.InboundToHive --conf spark.app.name=TestPOC --conf spark.mycustomKey=mycustomVALUE --conf spark.fs.defaultFS=hdfs://nn01.itversity.com:8020 /home/rajeshs/jars_from_intellij/new_jars/poc_hivetohbase_2.11-0.1.jar rajeshs_task_db retail_invoice_incr_avro test
-object InboundToHive {
+
+object InboundToHive_WithParse_AndProperties {
 
 
+  val config = ConfigFactory.parseFile(new File("C:/Users/SR00616861/Desktop/QueryConf.json"))
   val spark: SparkSession = SparkSession.builder().master("local[*]").enableHiveSupport().getOrCreate()
-  val hdfsHome = spark.sparkContext.getConf.get("spark.fs.defaultFS")
- // spark.sparkContext.hadoopConfiguration.set("fs.defaultFS", "hdfs://nn01.itversity.com:8020")
-  spark.sparkContext.hadoopConfiguration.set("fs.defaultFS", hdfsHome)
-  println(spark.sparkContext.getConf.get("spark.mycustomKey","hardcodedValue"))
-  val mycustomValue =Try{spark.sparkContext.getConf.get("spark.mycustomKey")}.getOrElse("Didnt Get the myCustomKey")
-  println(mycustomValue)
-  spark.sparkContext.getConf.getAll.foreach(println)
+  spark.sparkContext.hadoopConfiguration.set("fs.defaultFS", "hdfs://nn01.itversity.com:8020")
   val hadoopfs: FileSystem = FileSystem.get(spark.sparkContext.hadoopConfiguration)
   val hdfs_home_dir = hadoopfs.getHomeDirectory
   val inbound_location: String = hdfs_home_dir + "/external_table_location/inbound/"
@@ -35,19 +31,11 @@ object InboundToHive {
 
   def main (args: Array[String]) {
 
-    val database_name: String = args(0) //rajeshs_task_db retail_invoice_incr_avro
-    val table_name: String = args(1) //retail_invoice_incr_avro
+    val (database_name, table_name, isNewLoadRequested, isPostValidationRequired) = argParsing(args)
 
     val isTableLocationValid: Boolean = checkIfFileExists(table_location)
     val isInboundLocationValid: Boolean = checkIfFileExists(inbound_location)
-    // Need to implement args parser with scopt.OParser [pending]
-    if (args.length >= 2) {
-      println("database_name = " + database_name)
-      println("table_name = " + table_name)
-    } else {
-      println("terminating program since no database,table parameters didn't pass ")
-      System.exit(1)
-    }
+
     if (!isTableLocationValid) {
       println("please check if " + table_location + " is valid path")
       System.exit(1)
@@ -55,7 +43,7 @@ object InboundToHive {
       println("please check if " + inbound_location + " is valid path")
       System.exit(1)
     }
-    val isNewLoadRequested: Boolean = args.length >= 3 && args(2).equalsIgnoreCase("request_load")
+
     println("*****Requestd Reload ? :" + isNewLoadRequested + " ****")
     val isTableExists: Boolean = spark.catalog.tableExists(database_name, table_name)
 
@@ -97,9 +85,8 @@ object InboundToHive {
       writeToTable(database_name, table_name, customerInvoice_DF, isTableExists)
     }
     //if request_load added as arg(2)
-    if (args.length > 3 && args(3).equalsIgnoreCase("test")) postValidation(database_name + "." + table_name)
-    //if request_load ignored as arg(2)
-    if (args.length == 3 && args(2).equalsIgnoreCase("test")) postValidation(database_name + "." + table_name)
+    if (isPostValidationRequired) postValidation(database_name + "." + table_name)
+
 
 
   }
@@ -223,48 +210,47 @@ object InboundToHive {
     }
   }
 
-  /*
-    def argParsing(args:Array[String])={
+  def argParsing (args: Array[String]) = {
 
-      cmdParser.parse(args, ParseConfig() ) map { config =>
-        // do stuff
-        val database_name:String = config.database
-        val table_name:String = config.table
-        val isNewLoadRequested: Boolean =config.isLoadRequested
-        val isPostValidationRequired: Boolean =config.isPostValidationRequired
-        println("database_name==" + database_name)
-        println("database_name=" + table_name)
-        println("isNewLoadRequested=" + isNewLoadRequested)
-        println("isPostValidationRequired=" + isPostValidationRequired)
+    val finalArgs = cmdParser.parse(args, ParseConfig()) map { config =>
+      // do stuff
+      val database_name: String = config.database
+      val table_name: String = config.table
+      val isNewLoadRequested: Boolean = Try(config.isLoadRequested.toBoolean).getOrElse(false)
+      val isPostValidationRequired: Boolean = Try(config.isPostValidationRequired.toBoolean).getOrElse(false)
+      println("database_name= " + database_name)
+      println("database_name= " + table_name)
+      println("isNewLoadRequested= " + isNewLoadRequested)
+      println("isPostValidationRequired= " + isPostValidationRequired)
 
-      } getOrElse {
-        // arguments are bad, usage message will have been displayed
-      }
-  */
-  /*    val database_name: String = database_name //rajeshs_task_db
-      val table_name: String = table_name //retail_invoice_incr_avro
+      (database_name, table_name, isNewLoadRequested, isPostValidationRequired)
 
-      val isTableLocationValid: Boolean = checkIfFileExists(table_location)
-      val isInboundLocationValid: Boolean = checkIfFileExists(inbound_location)
-      // Need to implement args parser with scopt.OParser [pending]
-      if (args.length >= 2) {
-        println("database_name = " + database_name)
-        println("table_name = " + table_name)
-      } else {
-        println("terminating program since no database,table parameters didn't pass ")
-        System.exit(1)
-      }
-      if (!isTableLocationValid) {
-        println("please check if " + table_location + " is valid path")
-        System.exit(1)
-      } else if (!isInboundLocationValid) {
-        println("please check if " + inbound_location + " is valid path")
-        System.exit(1)
-      }
-      val isNewLoadRequested: Boolean = args.length >= 3 && args(2).equalsIgnoreCase("request_load")
-      println("*****Requestd Reload ? :"+isNewLoadRequested+" ****")*/
+    }
 
+    //  val (database_name,table_name,isNewLoadRequested,isPostValidationRequired) = finalArgs.get
+
+
+    //  (database_name,table_name,isNewLoadRequested,isPostValidationRequired)
+    finalArgs.get
+  }
 }
 
+/**
+  *
+  * working spark submit command:
+  *
+  * spark-submit --packages com.databricks:spark-avro_2.11:4.0.0 --class com.poc.spark.InboundToHive /home/rajeshs/jars_from_intellij/new_jars/poc_hivetohbase_2.11-0.1.jar rajeshs_task_db retail_invoice_incr_avro request_load test
+  *
+  * new:
+  * spark-submit --packages com.databricks:spark-avro_2.11:4.0.0
+  * --class com.poc.spark.InboundToHive
+  * /home/rajeshs/jars_from_intellij/new_parse_arg_jars/parse/poc_hivetohbase_2.11-0.1.jar
+  * rajeshs_task_db retail_invoice_incr_avro request_load test
+  *
+  *
+  * with scopt :
+  *
+  * spark-submit --packages com.databricks:spark-avro_2.11:4.0.0,com.github.scopt:scopt_2.11:3.3.0  --class com.poc.spark.InboundToHiveWithParse /home/rajeshs/jars_from_intellij/new_parse_arg_jars/parse/poc_hivetohbase_2.11-0.1.jar  --database rajeshs_task_db --table retail_invoice_incr_avro --load_request false --data_validation true
+  */
 
 
