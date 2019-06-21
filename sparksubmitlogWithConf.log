@@ -1,0 +1,173 @@
+[rajeshs@gw02 ~]$ spark-submit --packages com.databricks:spark-avro_2.11:4.0.0 --class com.poc.spark.InboundToHive --conf spark.app.name=TestPOC --conf spark.mycustomKey=mycustomVALUE --conf spark.fs.defaultFS=hdfs://nn01.itversity.com:8020 /home/rajeshs/jars_from_intellij/new_jars/poc_hivetohbase_2.11-0.1.jar rajeshs_task_db retail_invoice_incr_avro test
+SPARK_MAJOR_VERSION is set to 2, using Spark2
+Ivy Default Cache set to: /home/rajeshs/.ivy2/cache
+The jars for the packages stored in: /home/rajeshs/.ivy2/jars
+:: loading settings :: url = jar:file:/usr/hdp/2.6.5.0-292/spark2/jars/ivy-2.4.0.jar!/org/apache/ivy/core/settings/ivysettings.xml
+com.databricks#spark-avro_2.11 added as a dependency
+:: resolving dependencies :: org.apache.spark#spark-submit-parent;1.0
+        confs: [default]
+        found com.databricks#spark-avro_2.11;4.0.0 in central
+        found org.slf4j#slf4j-api;1.7.5 in central
+        found org.apache.avro#avro;1.7.6 in central
+        found org.codehaus.jackson#jackson-core-asl;1.9.13 in central
+        found org.codehaus.jackson#jackson-mapper-asl;1.9.13 in central
+        found com.thoughtworks.paranamer#paranamer;2.3 in central
+        found org.xerial.snappy#snappy-java;1.0.5 in central
+        found org.apache.commons#commons-compress;1.4.1 in central
+        found org.tukaani#xz;1.0 in central
+:: resolution report :: resolve 2193ms :: artifacts dl 10ms
+        :: modules in use:
+        com.databricks#spark-avro_2.11;4.0.0 from central in [default]
+        com.thoughtworks.paranamer#paranamer;2.3 from central in [default]
+        org.apache.avro#avro;1.7.6 from central in [default]
+        org.apache.commons#commons-compress;1.4.1 from central in [default]
+        org.codehaus.jackson#jackson-core-asl;1.9.13 from central in [default]
+        org.codehaus.jackson#jackson-mapper-asl;1.9.13 from central in [default]
+        org.slf4j#slf4j-api;1.7.5 from central in [default]
+        org.tukaani#xz;1.0 from central in [default]
+        org.xerial.snappy#snappy-java;1.0.5 from central in [default]
+        :: evicted modules:
+        org.slf4j#slf4j-api;1.6.4 by [org.slf4j#slf4j-api;1.7.5] in [default]
+        ---------------------------------------------------------------------
+        |                  |            modules            ||   artifacts   |
+        |       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+        ---------------------------------------------------------------------
+        |      default     |   10  |   1   |   1   |   1   ||   9   |   0   |
+        ---------------------------------------------------------------------
+
+:: problems summary ::
+:::: ERRORS
+        unknown resolver null
+
+
+:: USE VERBOSE OR DEBUG MESSAGE LEVEL FOR MORE DETAILS
+:: retrieving :: org.apache.spark#spark-submit-parent
+        confs: [default]
+        0 artifacts copied, 9 already retrieved (0kB/9ms)
+19/06/21 07:45:14 INFO SparkContext: Running Spark version 2.3.0.2.6.5.0-292
+19/06/21 07:45:14 INFO SparkContext: Submitted application: TestPOC
+19/06/21 07:45:15 INFO SecurityManager: Changing view acls to: rajeshs
+19/06/21 07:45:15 INFO SecurityManager: Changing modify acls to: rajeshs
+19/06/21 07:45:15 INFO SecurityManager: Changing view acls groups to:
+19/06/21 07:45:15 INFO SecurityManager: Changing modify acls groups to:
+19/06/21 07:45:15 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(rajeshs); groups with view permissions: Set(); users  with modify permissions: Set(rajeshs); groups with modify permissions: Set()
+19/06/21 07:45:15 INFO Utils: Successfully started service 'sparkDriver' on port 46487.
+19/06/21 07:45:15 INFO SparkEnv: Registering MapOutputTracker
+19/06/21 07:45:15 INFO SparkEnv: Registering BlockManagerMaster
+19/06/21 07:45:15 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+19/06/21 07:45:15 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+19/06/21 07:45:15 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-afa41b7a-37e5-4ff8-96ec-07151809c75e
+19/06/21 07:45:15 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+19/06/21 07:45:15 INFO SparkEnv: Registering OutputCommitCoordinator
+19/06/21 07:45:15 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+19/06/21 07:45:15 WARN Utils: Service 'SparkUI' could not bind on port 4041. Attempting port 4042.
+19/06/21 07:45:15 WARN Utils: Service 'SparkUI' could not bind on port 4042. Attempting port 4043.
+19/06/21 07:45:15 WARN Utils: Service 'SparkUI' could not bind on port 4043. Attempting port 4044.
+19/06/21 07:45:15 INFO Utils: Successfully started service 'SparkUI' on port 4044.
+19/06/21 07:45:15 INFO SparkUI: Bound SparkUI to 0.0.0.0, and started at http://gw02.itversity.com:4044
+19/06/21 07:45:16 INFO SparkContext: Added JAR file:///home/rajeshs/.ivy2/jars/com.databricks_spark-avro_2.11-4.0.0.jar at spark://gw02.itversity.com:46487/jars/com.databricks_spark-avro_2.11-4.0.0.jar with timestamp 1561117516153
+19/06/21 07:45:16 INFO SparkContext: Added JAR file:///home/rajeshs/.ivy2/jars/org.slf4j_slf4j-api-1.7.5.jar at spark://gw02.itversity.com:46487/jars/org.slf4j_slf4j-api-1.7.5.jar with timestamp 1561117516154
+19/06/21 07:45:16 INFO SparkContext: Added JAR file:///home/rajeshs/.ivy2/jars/org.apache.avro_avro-1.7.6.jar at spark://gw02.itversity.com:46487/jars/org.apache.avro_avro-1.7.6.jar with timestamp 1561117516154
+19/06/21 07:45:16 INFO SparkContext: Added JAR file:///home/rajeshs/.ivy2/jars/org.codehaus.jackson_jackson-core-asl-1.9.13.jar at spark://gw02.itversity.com:46487/jars/org.codehaus.jackson_jackson-core-asl-1.9.13.jar with timestamp 1561117516154
+19/06/21 07:45:16 INFO SparkContext: Added JAR file:///home/rajeshs/.ivy2/jars/org.codehaus.jackson_jackson-mapper-asl-1.9.13.jar at spark://gw02.itversity.com:46487/jars/org.codehaus.jackson_jackson-mapper-asl-1.9.13.jar with timestamp 1561117516154
+19/06/21 07:45:16 INFO SparkContext: Added JAR file:///home/rajeshs/.ivy2/jars/com.thoughtworks.paranamer_paranamer-2.3.jar at spark://gw02.itversity.com:46487/jars/com.thoughtworks.paranamer_paranamer-2.3.jar with timestamp 1561117516154
+19/06/21 07:45:16 INFO SparkContext: Added JAR file:///home/rajeshs/.ivy2/jars/org.xerial.snappy_snappy-java-1.0.5.jar at spark://gw02.itversity.com:46487/jars/org.xerial.snappy_snappy-java-1.0.5.jar with timestamp 1561117516154
+19/06/21 07:45:16 INFO SparkContext: Added JAR file:///home/rajeshs/.ivy2/jars/org.apache.commons_commons-compress-1.4.1.jar at spark://gw02.itversity.com:46487/jars/org.apache.commons_commons-compress-1.4.1.jar with timestamp 1561117516154
+19/06/21 07:45:16 INFO SparkContext: Added JAR file:///home/rajeshs/.ivy2/jars/org.tukaani_xz-1.0.jar at spark://gw02.itversity.com:46487/jars/org.tukaani_xz-1.0.jar with timestamp 1561117516154
+19/06/21 07:45:16 INFO SparkContext: Added JAR file:/home/rajeshs/jars_from_intellij/new_jars/poc_hivetohbase_2.11-0.1.jar at spark://gw02.itversity.com:46487/jars/poc_hivetohbase_2.11-0.1.jar with timestamp 1561117516154
+19/06/21 07:45:16 INFO Executor: Starting executor ID driver on host localhost
+19/06/21 07:45:16 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 52083.
+19/06/21 07:45:16 INFO NettyBlockTransferService: Server created on gw02.itversity.com:52083
+19/06/21 07:45:16 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+19/06/21 07:45:16 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, gw02.itversity.com, 52083, None)
+19/06/21 07:45:16 INFO BlockManagerMasterEndpoint: Registering block manager gw02.itversity.com:52083 with 366.3 MB RAM, BlockManagerId(driver, gw02.itversity.com, 52083, None)
+19/06/21 07:45:16 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, gw02.itversity.com, 52083, None)
+19/06/21 07:45:16 INFO BlockManager: external shuffle service port = 7447
+19/06/21 07:45:16 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, gw02.itversity.com, 52083, None)
+19/06/21 07:45:17 INFO EventLoggingListener: Logging events to hdfs:/spark2-history/local-1561117516174
+mycustomVALUE
+mycustomVALUE
+(spark.history.kerberos.keytab,none)
+(spark.dynamicAllocation.maxExecutors,4)
+(spark.eventLog.enabled,true)
+(spark.dynamicAllocation.executorIdleTimeout,300)
+(spark.mycustomKey,mycustomVALUE)
+(spark.history.ui.port,18081)
+(spark.driver.extraLibraryPath,/usr/hdp/current/hadoop-client/lib/native:/usr/hdp/current/hadoop-client/lib/native/Linux-amd64-64)
+(spark.executor.extraLibraryPath,/usr/hdp/current/hadoop-client/lib/native:/usr/hdp/current/hadoop-client/lib/native/Linux-amd64-64)
+(spark.driver.port,46487)
+(spark.history.provider,org.apache.spark.deploy.history.FsHistoryProvider)
+(spark.master,local[*])
+(spark.submit.deployMode,client)
+(spark.eventLog.dir,hdfs:///spark2-history/)
+(spark.yarn.historyServer.address,gw03.itversity.com:18081)
+(spark.repl.local.jars,file:///home/rajeshs/.ivy2/jars/com.databricks_spark-avro_2.11-4.0.0.jar,file:///home/rajeshs/.ivy2/jars/org.slf4j_slf4j-api-1.7.5.jar,file:///home/rajeshs/.ivy2/jars/org.apache.avro_avro-1.7.6.jar,file:///home/rajeshs/.ivy2/jars/org.codehaus.jackson_jackson-core-asl-1.9.13.jar,file:///home/rajeshs/.ivy2/jars/org.codehaus.jackson_jackson-mapper-asl-1.9.13.jar,file:///home/rajeshs/.ivy2/jars/com.thoughtworks.paranamer_paranamer-2.3.jar,file:///home/rajeshs/.ivy2/jars/org.xerial.snappy_snappy-java-1.0.5.jar,file:///home/rajeshs/.ivy2/jars/org.apache.commons_commons-compress-1.4.1.jar,file:///home/rajeshs/.ivy2/jars/org.tukaani_xz-1.0.jar)
+(spark.app.id,local-1561117516174)
+(spark.shuffle.service.enabled,true)
+(spark.app.name,TestPOC)
+(spark.yarn.queue,default)
+(spark.executor.id,driver)
+(spark.driver.host,gw02.itversity.com)
+(spark.fs.defaultFS,hdfs://nn01.itversity.com:8020)
+(spark.history.fs.logDirectory,hdfs:///spark2-history/)
+(spark.jars,file:///home/rajeshs/.ivy2/jars/com.databricks_spark-avro_2.11-4.0.0.jar,file:///home/rajeshs/.ivy2/jars/org.slf4j_slf4j-api-1.7.5.jar,file:///home/rajeshs/.ivy2/jars/org.apache.avro_avro-1.7.6.jar,file:///home/rajeshs/.ivy2/jars/org.codehaus.jackson_jackson-core-asl-1.9.13.jar,file:///home/rajeshs/.ivy2/jars/org.codehaus.jackson_jackson-mapper-asl-1.9.13.jar,file:///home/rajeshs/.ivy2/jars/com.thoughtworks.paranamer_paranamer-2.3.jar,file:///home/rajeshs/.ivy2/jars/org.xerial.snappy_snappy-java-1.0.5.jar,file:///home/rajeshs/.ivy2/jars/org.apache.commons_commons-compress-1.4.1.jar,file:///home/rajeshs/.ivy2/jars/org.tukaani_xz-1.0.jar,file:/home/rajeshs/jars_from_intellij/new_jars/poc_hivetohbase_2.11-0.1.jar)
+(spark.sql.catalogImplementation,hive)
+(spark.history.kerberos.principal,none)
+(spark.dynamicAllocation.minExecutors,0)
+(spark.dynamicAllocation.enabled,true)
+(spark.dynamicAllocation.initialExecutors,0)
+database_name = rajeshs_task_db
+table_name = retail_invoice_incr_avro
+*****Requestd Reload ? :false ****
+19/06/21 07:45:18 INFO SharedState: loading hive config file: file:/etc/spark2/2.6.5.0-292/0/hive-site.xml
+19/06/21 07:45:18 INFO SharedState: Setting hive.metastore.warehouse.dir ('null') to the value of spark.sql.warehouse.dir ('file:/home/rajeshs/spark-warehouse').
+19/06/21 07:45:18 INFO SharedState: Warehouse path is 'file:/home/rajeshs/spark-warehouse'.
+19/06/21 07:45:19 INFO StateStoreCoordinatorRef: Registered StateStoreCoordinator endpoint
+19/06/21 07:45:19 INFO HiveUtils: Initializing HiveMetastoreConnection version 1.2.1 using Spark classes.
+19/06/21 07:45:20 INFO metastore: Trying to connect to metastore with URI thrift://nn01.itversity.com:9083
+19/06/21 07:45:20 INFO metastore: Connected to metastore.
+19/06/21 07:45:36 INFO SessionState: Created local directory: /tmp/27955d56-333d-4c2e-8360-8430dc33a65e_resources
+19/06/21 07:45:36 INFO SessionState: Created HDFS directory: /tmp/hive/rajeshs/27955d56-333d-4c2e-8360-8430dc33a65e
+19/06/21 07:45:36 INFO SessionState: Created local directory: /tmp/rajeshs/27955d56-333d-4c2e-8360-8430dc33a65e
+19/06/21 07:45:36 INFO SessionState: Created HDFS directory: /tmp/hive/rajeshs/27955d56-333d-4c2e-8360-8430dc33a65e/_tmp_space.db
+19/06/21 07:45:36 INFO HiveClientImpl: Warehouse location for Hive client (version 1.2.2) is file:/home/rajeshs/spark-warehouse
+ The available files at inbound location are
+2010-12-01.csv
+2010-12-02.csv
+2010-12-03.csv
+2010-12-05.csv
+2010-12-06.csv
+2010-12-07.csv
+2010-12-08.csv
+picking latest file from inbound
+latest file name : 2010-12-08.csv
+filename for reading dataframe 2010-12-08.csv
++---------+---------+----------------------------------+--------+-------------------+---------+----------+--------------+--------+
+|InvoiceNo|StockCode|Description                       |Quantity|InvoiceDate        |UnitPrice|CustomerID|Country       |datestr |
++---------+---------+----------------------------------+--------+-------------------+---------+----------+--------------+--------+
+|537667   |22158    |3 HEARTS HANGING DECORATION RUSTIC|128     |2010-12-08 08:12:00|2.55     |17870.0   |United Kingdom|20101208|
+|537668   |22867    |HAND WARMER BIRD DESIGN           |12      |2010-12-08 08:43:00|2.1      |14821.0   |United Kingdom|20101208|
++---------+---------+----------------------------------+--------+-------------------+---------+----------+--------------+--------+
+only showing top 2 rows
+
+current_partition 20101208 and fileValue 20101208
+file was already processed
+file is already processed...
+2010-12-08.csv is already loaded to table
+ Please add optional parameter 'request_load' at the end of spark-submit to load the new file to inbound
+current status of data is
++--------+-----+
+| datestr|count|
++--------+-----+
+|20101205| 2725|
+|20101206| 3878|
+|20101202| 8436|
+|20101203| 2202|
+|20101207| 2963|
+|20101201| 3108|
+|20101208| 2647|
++--------+-----+
+
+total number of records :25959
+total number of unique records :19321
+******job is completed******
