@@ -13,7 +13,8 @@ import scala.util.Try
 //com.poc.spark.InboundToHive
 // new spark-submit for --conf changes
 //spark-submit --packages com.databricks:spark-avro_2.11:4.0.0 --class com.poc.spark.InboundToHive --conf spark.app.name=TestPOC --conf spark.mycustomKey=mycustomVALUE --conf spark.fs.defaultFS=hdfs://nn01.itversity.com:8020 /home/rajeshs/jars_from_intellij/new_jars/poc_hivetohbase_2.11-0.1.jar rajeshs_task_db retail_invoice_incr_avro test
-object InboundToHive {
+//spark-submit --packages com.databricks:spark-avro_2.11:4.0.0 --class com.poc.spark.InboundToHiveForConf --properties-file confDir/application.conf /home/rajeshs/jars_from_intellij/new_jars/poc_hivetohbase_2.11-0.1.jar rajeshs_task_db retail_invoice_incr_avro test
+object InboundToHiveForConf {
 
 
   val spark: SparkSession = SparkSession.builder().master("local[*]").enableHiveSupport().getOrCreate()
