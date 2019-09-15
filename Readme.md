@@ -1,1 +1,1 @@
-Spark incremental load automated
+POC : Spark incremental load automated. 
