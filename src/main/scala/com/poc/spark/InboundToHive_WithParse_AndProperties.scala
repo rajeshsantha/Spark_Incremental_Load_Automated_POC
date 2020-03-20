@@ -17,7 +17,7 @@ import scala.util.Try
 object InboundToHive_WithParse_AndProperties {
 
 
-  val config = ConfigFactory.parseFile(new File("C:/Users/SR00616861/Desktop/QueryConf.json"))
+  val config = ConfigFactory.parseFile(new File("C:/Users/.../Desktop/QueryConf.json"))
   val spark: SparkSession = SparkSession.builder().master("local[*]").enableHiveSupport().getOrCreate()
   spark.sparkContext.hadoopConfiguration.set("fs.defaultFS", "hdfs://nn01.itversity.com:8020")
   val hadoopfs: FileSystem = FileSystem.get(spark.sparkContext.hadoopConfiguration)
